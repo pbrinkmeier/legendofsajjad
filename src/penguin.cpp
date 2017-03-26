@@ -12,7 +12,7 @@
 namespace los {
 	Penguin::Penguin(SDL_Renderer *renderer, const signed short posx, const signed short posy)
 		: m_posx(posx), m_posy(posy) {
-		SDL_Surface *sf = IMG_Load("../res/tux.png");
+		SDL_Surface *sf = IMG_Load("../res/entities/tux.png");
 
 		const signed short SIZEMOD = 3;
 		m_width = 16;

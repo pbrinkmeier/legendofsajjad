@@ -10,12 +10,12 @@ namespace los {
 		const Uint32 W_FLAGS = SDL_WINDOW_ALLOW_HIGHDPI;
 		m_window = SDL_CreateWindow(title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, W_FLAGS);
 		if (m_window == nullptr)
-			std::cerr << "SRC: window.cpp\t ERR: Failed to create window, " << SDL_GetError() << "\n";
+			std::cerr << "SRC: window.cpp\tERR: Failed to create window, " << SDL_GetError() << "\n";
 	
 		const Uint32 R_FLAGS = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
 		m_renderer = SDL_CreateRenderer(m_window, -1, R_FLAGS);
 		if (m_renderer == nullptr)
-			std::cerr << "SRC: window.cpp\t ERR: Failed to create renderer, " << SDL_GetError() << "\n";
+			std::cerr << "SRC: window.cpp\tERR: Failed to create renderer, " << SDL_GetError() << "\n";
 	
 		m_world = new World(m_renderer, width, height);
 		m_shouldClose = false;

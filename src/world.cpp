@@ -1,6 +1,7 @@
 #include "world.hpp"
 #include "keyboard.hpp"
 
+#include "sfx/soundBank.hpp"
 #include "util/surfaceEditor.hpp"
 #include "util/surfaceCreator.hpp"
 
@@ -12,7 +13,7 @@
 namespace los {
 	World::World(SDL_Renderer *renderer, signed short windowWidth, signed short windowHeight) {	
 		SDL_Surface **floorPixels = new SDL_Surface*[4];
-		SDL_Surface *floorPNG = IMG_Load("../res/floor.png");
+		SDL_Surface *floorPNG = IMG_Load("../res/tiles/floor.png");
 
 		srand(time(NULL));
 		floorPixels[0] = SurfaceEditor::crop(floorPNG, 0,  0, 16, 16);
@@ -46,6 +47,7 @@ namespace los {
 			SDL_FreeSurface(floorPixels[i]);
 		SDL_FreeSurface(floorPNG);
 
+		SoundBank::init();
 		m_ui = new UI(renderer);
 		m_player = new Player(renderer, (windowWidth - 16 * 3) / 2.0, (windowHeight - 24 * 3) / 2.0);
 		
@@ -64,6 +66,8 @@ namespace los {
 		for (Penguin *p : m_penguins)
 			delete p;
 		m_penguins.clear();
+
+		SoundBank::destroy();
 
 		delete m_ui;
 		delete m_player;
@@ -122,7 +126,6 @@ namespace los {
 
 	void World::applyCollisions() {
 		SDL_Rect playerBox = m_player->getHitbox();
-
 		auto it = m_penguins.begin();
 		while (it != m_penguins.end()) {
 			if ((*it)->isDying()) {
@@ -133,6 +136,7 @@ namespace los {
 			SDL_Rect penBox = (*it)->getHitbox();
 			if (SDL_HasIntersection(&playerBox, &penBox) == SDL_TRUE) {
 				if (!m_player->isInvincible()) {
+					SoundBank::playSound("playerdamage");
 					m_player->hit();
 					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 1);
 				}
@@ -140,6 +144,7 @@ namespace los {
 
 			SDL_Rect projectileHitbox = m_player->getProjectileHitbox();
 			if (m_player->projectileFlying() && SDL_HasIntersection(&penBox, &projectileHitbox) == SDL_TRUE) {
+				SoundBank::playSound("penguin");
 				m_player->resetProjectile();
 				m_ui->setPenguinDeaths(m_ui->getPenguinDeaths() + 1);
 				(*it)->hit();

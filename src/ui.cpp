@@ -6,7 +6,7 @@
 
 namespace los {
 	UI::UI(SDL_Renderer *renderer) {
-		SDL_Surface *hrts = IMG_Load("../res/hearts.png");
+		SDL_Surface *hrts = IMG_Load("../res/misc/hearts.png");
 		const signed short SIZEMOD = 3;
 
 		for (unsigned char x = 0; x < 2; x++) {

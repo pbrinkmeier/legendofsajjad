@@ -1,5 +1,6 @@
 #include "player.hpp"
 #include "keyboard.hpp"
+#include "sfx/soundBank.hpp"
 #include "util/surfaceEditor.hpp"
 #include "util/surfaceCreator.hpp"
 
@@ -8,7 +9,7 @@
 namespace los {
 	Player::Player(SDL_Renderer *renderer, const signed short posx, const signed short posy)
 		: m_posx(posx), m_posy(posy) {
-		SDL_Surface *sf = IMG_Load("../res/player.png");
+		SDL_Surface *sf = IMG_Load("../res/entities/player.png");
 
 		const signed short SIZEMOD = 3;
 		m_width = 16;
@@ -40,7 +41,7 @@ namespace los {
 			SDL_FreeSurface(tmp);
 		}
 
-		SDL_Surface *projectile = IMG_Load("../res/projectile.png");
+		SDL_Surface *projectile = IMG_Load("../res/misc/projectile.png");
 		m_projectileSprite = new Sprite(renderer, projectile, 0, 0, 8 * 1.5, 8 * 1.5);
 		
 		SDL_Surface *emptySurface = SurfaceCreator::createEmptySurface(16, 16);
@@ -99,6 +100,7 @@ namespace los {
 		}
 
 		if (Keyboard::keyDown(SDL_SCANCODE_RIGHT) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
+			SoundBank::playSound("projectile");
 			m_projectileFlying = true;
 			m_projectileDirY = 0.0f;
 			m_projectileDirX = 1.0f;
@@ -107,6 +109,7 @@ namespace los {
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_LEFT) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
+			SoundBank::playSound("projectile");
 			m_projectileFlying = true;
 			m_projectileDirY = 0.0f;
 			m_projectileDirX = -1.0f;
@@ -115,6 +118,7 @@ namespace los {
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_DOWN) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
+			SoundBank::playSound("projectile");
 			m_projectileFlying = true;
 			m_projectileDirY = 1.0f;
 			m_projectileDirX = 0.0f;
@@ -123,6 +127,7 @@ namespace los {
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_UP) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
+			SoundBank::playSound("projectile");
 			m_projectileFlying = true;
 			m_projectileDirY = -1.0f;
 			m_projectileDirX = 0.0f;
