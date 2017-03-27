@@ -1,5 +1,6 @@
 #pragma once
 
+#include "boss/boss.hpp"
 #include "gfx/sprite.hpp"
 #include "player.hpp"
 #include "penguin.hpp"
@@ -19,9 +20,10 @@ namespace los {
 		private:
 			void applyCollisions();
 		private:
-			UI *m_ui;
-			Player *m_player;
-			Sprite *m_floor;
+			UI *m_ui = nullptr;
+			Boss *m_boss = nullptr;
+			Player *m_player = nullptr;
+			Sprite *m_floor = nullptr;
 			std::vector<Penguin*> m_penguins;
 	};
 };

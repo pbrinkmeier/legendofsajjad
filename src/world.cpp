@@ -4,6 +4,7 @@
 #include "sfx/soundBank.hpp"
 #include "util/surfaceEditor.hpp"
 #include "util/surfaceCreator.hpp"
+#include "boss/patrick.hpp"
 
 #include <stdlib.h>
 
@@ -51,7 +52,7 @@ namespace los {
 		m_ui = new UI(renderer);
 		m_player = new Player(renderer, (windowWidth - 16 * 3) / 2.0, (windowHeight - 24 * 3) / 2.0);
 		
-		const signed short MAX_PENGUINS = 20;
+		const signed short MAX_PENGUINS = 32;
 		for (signed short i = 0; i < MAX_PENGUINS; i++) {
 			signed short sWidth = static_cast<signed short>(m_floor->getWidthResized() - windowWidth);
 			signed short sHeight = static_cast<signed short>(m_floor->getHeightResized() - windowHeight);
@@ -74,16 +75,22 @@ namespace los {
 		delete m_floor;
 	}
 
-	void World::render(SDL_Renderer *m_renderer) {
-		SDL_RenderClear(m_renderer);
+	void World::render(SDL_Renderer *renderer) {
+		SDL_RenderClear(renderer);
 
-		m_floor->render(m_renderer);
+		m_floor->render(renderer);
 		for (Penguin *p : m_penguins)
-			p->render(m_renderer);
-		m_player->render(m_renderer);
-		m_ui->render(m_renderer);
+			p->render(renderer);
+		m_player->render(renderer);
 
-		SDL_RenderPresent(m_renderer);
+		if (m_penguins.size() == 0 && m_boss == nullptr)
+			m_boss = new Patrick(renderer);
+
+		if (m_boss != nullptr)
+			m_boss->render(renderer);
+
+		m_ui->render(renderer);
+		SDL_RenderPresent(renderer);
 	}
 
 	void World::update(const double tslf, signed short windowWidth, signed short windowHeight) {
@@ -111,7 +118,10 @@ namespace los {
 
 		m_floor->move(xOff, yOff);
 		m_player->update(tslf);
-		
+	
+		if (m_boss != nullptr)
+			m_boss->update(tslf, xOff, yOff);
+
 		auto it = m_penguins.begin();
 		while (it != m_penguins.end()) {
 			(*it)->update(tslf, xOff, yOff, windowWidth, windowHeight);
@@ -138,7 +148,7 @@ namespace los {
 				if (!m_player->isInvincible()) {
 					SoundBank::playSound("playerdamage");
 					m_player->hit();
-					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 1);
+					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 4);
 				}
 			}
 
@@ -146,6 +156,7 @@ namespace los {
 			if (m_player->projectileFlying() && SDL_HasIntersection(&penBox, &projectileHitbox) == SDL_TRUE) {
 				SoundBank::playSound("penguin");
 				m_player->resetProjectile();
+				m_ui->setPlayerHealth(m_ui->getPlayerHealth() + 1);
 				m_ui->setPenguinDeaths(m_ui->getPenguinDeaths() + 1);
 				(*it)->hit();
 			} else ++it;
