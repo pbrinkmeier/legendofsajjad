@@ -21,9 +21,9 @@ namespace los {
 			void setPenguinDeaths(signed short i);
 			short getPenguinDeaths();
 		private:
-			Sprite **m_hearts = new Sprite*[2];
+			Sprite *m_heart;
 		private:
-			const signed char HEART_MAX = 8;
-			signed char m_heartCount = HEART_MAX;
+			signed char m_heartCount = 8;
+			signed char m_playerHealth = 8 * 4;
 	};
 };
