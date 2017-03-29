@@ -44,10 +44,6 @@ namespace los {
 		SDL_Surface *projectile = IMG_Load("../res/misc/projectile.png");
 		m_projectileSprite = new Sprite(renderer, projectile, 0, 0, 8 * 1.5, 8 * 1.5);
 		
-		SDL_Surface *emptySurface = SurfaceCreator::createEmptySurface(16, 16);
-		m_emptySprite = new Sprite(renderer, emptySurface, m_posx, m_posy, m_widthResized, m_heightResized);
-
-		SDL_FreeSurface(emptySurface);
 		SDL_FreeSurface(projectile);
 		SDL_FreeSurface(sf);
 
@@ -56,7 +52,6 @@ namespace los {
 	}
 
 	Player::~Player() {
-		delete m_emptySprite;
 		delete[] m_upSprites;
 		delete[] m_downSprites;
 		delete[] m_leftSprites;
@@ -65,10 +60,7 @@ namespace los {
 	}
 
 	void Player::render(SDL_Renderer *renderer) {
-		if (isInvincible() && SDL_GetTicks() % 2 == 0) {
-			m_emptySprite->setPosition(m_posx, m_posy);
-			m_emptySprite->render(renderer);
-		} else
+		if ((isInvincible() && SDL_GetTicks() % 2 == 0) || !isInvincible())
 			m_currentSprites[m_currentIndex]->render(renderer);
 
 		if (m_projectileFlying)
@@ -105,7 +97,7 @@ namespace los {
 			m_projectileDirY = 0.0f;
 			m_projectileDirX = 1.0f;
 			m_projectilePosX = m_posx + 48;
-			m_projectilePosY = m_posy;
+			m_projectilePosY = m_posy + 8;
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_LEFT) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
@@ -114,7 +106,7 @@ namespace los {
 			m_projectileDirY = 0.0f;
 			m_projectileDirX = -1.0f;
 			m_projectilePosX = m_posx - 48;
-			m_projectilePosY = m_posy;
+			m_projectilePosY = m_posy + 8;
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_DOWN) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
@@ -122,7 +114,7 @@ namespace los {
 			m_projectileFlying = true;
 			m_projectileDirY = 1.0f;
 			m_projectileDirX = 0.0f;
-			m_projectilePosX = m_posx;
+			m_projectilePosX = m_posx + 16;
 			m_projectilePosY = m_posy + 48;
 		}
 
@@ -131,7 +123,7 @@ namespace los {
 			m_projectileFlying = true;
 			m_projectileDirY = -1.0f;
 			m_projectileDirX = 0.0f;
-			m_projectilePosX = m_posx;
+			m_projectilePosX = m_posx + 16;
 			m_projectilePosY = m_posy - 48;
 		}
 

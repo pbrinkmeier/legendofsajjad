@@ -52,7 +52,6 @@ namespace los {
 			Sprite **m_downSprites = new Sprite*[3];
 			Sprite **m_leftSprites = new Sprite*[3];
 			Sprite **m_rightSprites = new Sprite*[3];
-			Sprite *m_emptySprite;
 		private:
 			float m_projectileDirX = 0.0f;
 			float m_projectileDirY = 0.0f;
