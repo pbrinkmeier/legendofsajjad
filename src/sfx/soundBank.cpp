@@ -15,7 +15,9 @@ namespace los {
 		const int CHUNKSIZE = 4096;
 		if (Mix_OpenAudio(FREQUENCY, FORMAT, CHANNELS, CHUNKSIZE) == -1)
 			std::cerr << "SRC: soundBank.cpp\tERR: Failed to initialize audio API\n";
-	
+
+		Mix_Volume(-1, MIX_MAX_VOLUME / 6);
+
 		m_sounds["patrick"] = loadSound("../res/sound/patrick.wav");
 		m_sounds["penguin"] = loadSound("../res/sound/penguin.wav");
 		m_sounds["playerdamage"] = loadSound("../res/sound/playerdamage.wav");
