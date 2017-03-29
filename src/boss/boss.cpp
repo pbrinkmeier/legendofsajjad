@@ -55,6 +55,8 @@ namespace los {
 	}
 
 	void Boss::update(const double tslf, const float worldX, const float worldY, const float xOff, const float yOff) {
+		const float SPEED = 5.0f;
+		
 		m_boss->move(xOff, yOff);
 		
 		if (SDL_GetTicks() > m_animStart && SDL_GetTicks() < m_animStart + 1000)
@@ -68,34 +70,35 @@ namespace los {
 		static Uint32 nextUpdate = SDL_GetTicks() + 3000;
 
 		if (SDL_GetTicks() > nextUpdate) {
-			xDir = rand() % 2;
-			yDir = rand() % 2;
+			if (rand() % 10 >= 5) {
+				nextUpdate = SDL_GetTicks() + 2000;
+				xDir = worldX + 1200 - m_boss->getWidthResized() / 2.0f - m_boss->getX();
+				yDir = worldY + 900 - m_boss->getHeightResized() / 2.0f - m_boss->getY();
+
+				float pythLength = std::sqrt(xDir * xDir + yDir * yDir);
+				xDir /= pythLength;
+				yDir /= pythLength;
+
+				xDir *= SPEED;
+				yDir *= SPEED;
+			} else {
+				xDir = rand() % 2;
+				yDir = rand() % 2;
+			}
 			nextUpdate = SDL_GetTicks() + 3000;
 		}
 
 		float bossX = m_boss->getX();
 		float bossY = m_boss->getY();
 		if (bossX < worldX)
-			xDir = 6.0f;
+			xDir = SPEED;
 		if (bossX > worldX + 2400)
-			xDir = -6.0f;
+			xDir = -SPEED;
 		if (bossY < worldY)
-			yDir = 6.0f;
+			yDir = SPEED;
 		if (bossY > worldY + 1800)
-			yDir = -6.0f;
+			yDir = -SPEED;
 
-		if (rand() % 100 >= 99) {
-			nextUpdate = SDL_GetTicks() + 2000;
-			xDir = 400 - m_boss->getWidthResized() / 2.0f - m_boss->getX();
-			yDir = 300 - m_boss->getHeightResized() / 2.0f - m_boss->getY();
-
-			float pythLength = std::sqrt(xDir * xDir + yDir * yDir);
-			xDir /= pythLength;
-			yDir /= pythLength;
-
-			xDir *= 4;
-			yDir *= 4;
-		}
 
 		m_boss->move(xDir * tslf * 256, yDir * tslf * 256);
 	}
