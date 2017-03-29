@@ -14,6 +14,8 @@ namespace los {
 		private:
 			static Mix_Chunk* loadSound(const char*);
 		public:
+			static void loop(const char*);
+			static void stop();
 			static void playSound(const char*);
 		private:
 			static std::map<const char*, Mix_Chunk*> m_sounds;

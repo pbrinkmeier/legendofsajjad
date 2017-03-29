@@ -22,6 +22,9 @@ namespace los {
 		m_sounds["penguin"] = loadSound("../res/sound/penguin.wav");
 		m_sounds["playerdamage"] = loadSound("../res/sound/playerdamage.wav");
 		m_sounds["projectile"] = loadSound("../res/sound/projectile.wav");
+		m_sounds["bossdeath"] = loadSound("../res/sound/bossdeath.wav");
+		m_sounds["maintheme"] = loadSound("../res/sound/maintheme.ogg");
+		m_sounds["finalboss"] = loadSound("../res/sound/finalbosstheme.ogg");
 	}
 
 	void SoundBank::destroy() {
@@ -35,6 +38,14 @@ namespace los {
 
 	void SoundBank::playSound(const char *soundName) {
 		Mix_PlayChannel(-1, m_sounds.at(soundName), 0);
+	}
+
+	void SoundBank::stop() {
+		Mix_HaltChannel(-1);
+	}
+
+	void SoundBank::loop(const char *soundName) {
+		Mix_PlayChannel(-1, m_sounds.at(soundName), -1);
 	}
 
 	Mix_Chunk* SoundBank::loadSound(const char *file) {
