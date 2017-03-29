@@ -7,7 +7,5 @@ namespace los {
 		public:
 			Patrick(SDL_Renderer*);
 			~Patrick();
-		public:
-			void update(const double, const float, const float) override;
 	};
 };

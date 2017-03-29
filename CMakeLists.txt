@@ -10,7 +10,10 @@ ADD_EXECUTABLE(LegendOfSajjad 	src/main.cpp
 								src/sfx/soundBank.cpp
 								src/gfx/sprite.cpp
 								src/boss/boss.cpp
-								src/boss/patrick.cpp)
+								src/boss/patrick.cpp
+								src/boss/aaron.cpp
+								src/boss/valentin.cpp
+								src/boss/jannik.cpp)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m64")
