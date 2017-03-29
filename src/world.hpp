@@ -17,11 +17,22 @@ namespace los {
 		public:
 			void render(SDL_Renderer*);
 			void update(const double, signed short, signed short);
+		public:
+			inline bool gameWon() {
+				return m_won;
+			}
+		public:
+			inline bool gameOver() {
+				return m_lost;
+			}
 		private:
 			void applyCollisions();
 		private:
 			signed char m_nextBossID;
 			Uint32 m_bossSpawnTime;
+		private:
+			bool m_lost = false;
+			bool m_won = false;
 		private:
 			SDL_Renderer *m_renderer;
 		private:

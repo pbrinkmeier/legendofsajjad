@@ -67,6 +67,7 @@ namespace los {
 			m_penguins.push_back(pen);
 		}
 
+		SoundBank::loop("maintheme");
 		m_nextBossID = 0;
 		m_bossSpawnTime = SDL_GetTicks() + 10000;
 	}
@@ -84,8 +85,6 @@ namespace los {
 	}
 
 	void World::render(SDL_Renderer *renderer) {
-		SDL_RenderClear(renderer);
-
 		m_floor->render(renderer);
 		for (Penguin *p : m_penguins)
 			p->render(renderer);
@@ -95,31 +94,38 @@ namespace los {
 			m_boss->render(renderer);
 
 		m_ui->render(renderer);
-		SDL_RenderPresent(renderer);
 	}
 
 	void World::update(const double tslf, signed short windowWidth, signed short windowHeight) {
 		const float SPEED = tslf * 150.0f;
 		float xOff = 0.0f;
 		float yOff = 0.0f;
+		
+		if (m_ui->getPlayerHealth() <= 3 && !m_player->isDying() && !m_player->isDead())
+			m_player->die();
 
-		if (Keyboard::keyDown(SDL_SCANCODE_W))
-			yOff += SPEED;
-		if (Keyboard::keyDown(SDL_SCANCODE_S))
-			yOff -= SPEED;
-		if (Keyboard::keyDown(SDL_SCANCODE_A))
-			xOff += SPEED;
-		if (Keyboard::keyDown(SDL_SCANCODE_D))
-			xOff -= SPEED;
+		if (m_player->isDead())
+			m_lost = true;
 
-		if (m_floor->getX() >= -0.1f && xOff > 0.0f)
-			xOff = 0.0f;
-		if (m_floor->getY() >= -0.1f && yOff > 0.0f)
-			yOff = 0.0f;
-		if (m_floor->getX() <= -m_floor->getWidth() - windowWidth && xOff < 0.0f)
-			xOff = 0.0f;
-		if (m_floor->getY() <= -m_floor->getHeight() - windowHeight && yOff < 0.0f)
-			yOff = 0.0f;
+		if (!m_player->isDying()) {
+			if (Keyboard::keyDown(SDL_SCANCODE_W))
+				yOff += SPEED;
+			if (Keyboard::keyDown(SDL_SCANCODE_S))
+				yOff -= SPEED;
+			if (Keyboard::keyDown(SDL_SCANCODE_A))
+				xOff += SPEED;
+			if (Keyboard::keyDown(SDL_SCANCODE_D))
+				xOff -= SPEED;
+
+			if (m_floor->getX() >= -0.1f && xOff > 0.0f)
+				xOff = 0.0f;
+			if (m_floor->getY() >= -0.1f && yOff > 0.0f)
+				yOff = 0.0f;
+			if (m_floor->getX() <= -m_floor->getWidth() - windowWidth && xOff < 0.0f)
+				xOff = 0.0f;
+			if (m_floor->getY() <= -m_floor->getHeight() - windowHeight && yOff < 0.0f)
+				yOff = 0.0f;
+		}
 
 		m_floor->move(xOff, yOff);
 		m_player->update(tslf);
@@ -149,7 +155,7 @@ namespace los {
 				case 2:
 					m_boss = new Aaron(m_renderer); break;
 				case 3:
-					m_boss = new Jannik(m_renderer); break;
+					m_boss = new Jannik(m_renderer); SoundBank::stop(); SoundBank::loop("finalboss"); break;
 				default:
 					m_boss = nullptr;
 			}
@@ -157,7 +163,12 @@ namespace los {
 		
 		if (m_boss != nullptr) {
 			if (m_boss->isDead()) {
-				for (signed char i = 0; i < m_boss->IDENTIFIER + 1; i++) {
+				if (m_boss->IDENTIFIER == 3) {
+					m_won = true;
+					return;
+				}
+
+				for (signed char i = 0; i < 4 - m_boss->IDENTIFIER; i++) {
 					for (signed char j = 0; j < 32; j++) {
 						signed short sWidth = static_cast<signed short>(m_floor->getWidthResized() - windowWidth);
 						signed short sHeight = static_cast<signed short>(m_floor->getHeightResized() - windowHeight);
@@ -167,13 +178,14 @@ namespace los {
 						m_penguins.push_back(pen);
 					}
 				}
+				SoundBank::playSound("bossdeath");
 				m_bossSpawnTime = SDL_GetTicks() + 10000;
 				delete m_boss;
 				m_boss = nullptr;
 				m_nextBossID++;
 			}
 		}
-		
+	
 		applyCollisions();
 	}
 
@@ -219,7 +231,12 @@ namespace los {
 			if (!m_player->isInvincible())
 				if (SDL_HasIntersection(&bossBox, &playerBox) == SDL_TRUE) {
 					m_player->hit();
-					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 4);
+
+					signed char damageMultiplier = 1;
+					if (m_boss->IDENTIFIER > 2)
+						damageMultiplier = m_boss->IDENTIFIER;
+
+					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 4 * damageMultiplier);
 					SoundBank::playSound("playerdamage");
 				}
 		}

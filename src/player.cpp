@@ -44,6 +44,10 @@ namespace los {
 		SDL_Surface *projectile = IMG_Load("../res/misc/projectile.png");
 		m_projectileSprite = new Sprite(renderer, projectile, 0, 0, 8 * 1.5, 8 * 1.5);
 		
+		SDL_Surface *deathSurface = SurfaceEditor::crop(sf, 0, 48, m_width, m_height);
+		m_deathSprite = new Sprite(renderer, deathSurface, m_posx, m_posy, m_widthResized, m_heightResized);
+
+		SDL_FreeSurface(deathSurface);
 		SDL_FreeSurface(projectile);
 		SDL_FreeSurface(sf);
 
@@ -52,6 +56,7 @@ namespace los {
 	}
 
 	Player::~Player() {
+		delete m_deathSprite;
 		delete[] m_upSprites;
 		delete[] m_downSprites;
 		delete[] m_leftSprites;
@@ -60,6 +65,12 @@ namespace los {
 	}
 
 	void Player::render(SDL_Renderer *renderer) {
+		if (m_dying) {
+			if (SDL_GetTicks() % 2 == 0)
+				m_deathSprite->render(renderer);	
+			return;
+		}
+		
 		if ((isInvincible() && SDL_GetTicks() % 2 == 0) || !isInvincible())
 			m_currentSprites[m_currentIndex]->render(renderer);
 
@@ -73,6 +84,12 @@ namespace los {
 
 		static unsigned char index = 0;
 		bool walking = false;
+
+		if (m_dying || m_dead) {
+			if (SDL_GetTicks() > m_deathTimer)
+				m_dead = true;
+			return;
+		}
 
 		if (Keyboard::keyDown(SDL_SCANCODE_S)) {
 			walking = true;

@@ -44,6 +44,23 @@ namespace los {
 				return hitbox;
 			}
 		private:
+			bool m_dying = false;
+			bool m_dead = false;
+			Uint32 m_deathTimer;
+		public:
+			inline void die() {
+				m_dying = true;
+				m_deathTimer = SDL_GetTicks() + 3000;
+			}
+		public:
+			inline bool isDying() {
+				return m_dying;
+			}
+		public:
+			inline bool isDead() {
+				return m_dead;
+			}
+		private:
 			Uint32 m_invincibleUntil = 0;
 		private:
 			unsigned char m_currentIndex = 0;
@@ -52,6 +69,7 @@ namespace los {
 			Sprite **m_downSprites = new Sprite*[3];
 			Sprite **m_leftSprites = new Sprite*[3];
 			Sprite **m_rightSprites = new Sprite*[3];
+			Sprite *m_deathSprite;
 		private:
 			float m_projectileDirX = 0.0f;
 			float m_projectileDirY = 0.0f;
