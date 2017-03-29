@@ -20,6 +20,11 @@ namespace los {
 		private:
 			void applyCollisions();
 		private:
+			signed char m_nextBossID;
+			Uint32 m_bossSpawnTime;
+		private:
+			SDL_Renderer *m_renderer;
+		private:
 			UI *m_ui = nullptr;
 			Boss *m_boss = nullptr;
 			Player *m_player = nullptr;

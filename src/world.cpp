@@ -4,7 +4,11 @@
 #include "sfx/soundBank.hpp"
 #include "util/surfaceEditor.hpp"
 #include "util/surfaceCreator.hpp"
+
 #include "boss/patrick.hpp"
+#include "boss/aaron.hpp"
+#include "boss/valentin.hpp"
+#include "boss/jannik.hpp"
 
 #include <stdlib.h>
 
@@ -12,7 +16,8 @@
 #include <SDL2/SDL_image.h>
 
 namespace los {
-	World::World(SDL_Renderer *renderer, signed short windowWidth, signed short windowHeight) {	
+	World::World(SDL_Renderer *renderer, signed short windowWidth, signed short windowHeight) 
+		: m_renderer(renderer) {
 		SDL_Surface **floorPixels = new SDL_Surface*[4];
 		SDL_Surface *floorPNG = IMG_Load("../res/tiles/floor.png");
 
@@ -61,6 +66,9 @@ namespace los {
 			Penguin *pen = new Penguin(renderer, pposx, pposy);
 			m_penguins.push_back(pen);
 		}
+
+		m_nextBossID = 0;
+		m_bossSpawnTime = SDL_GetTicks() + 10000;
 	}
 
 	World::~World() {
@@ -82,9 +90,6 @@ namespace los {
 		for (Penguin *p : m_penguins)
 			p->render(renderer);
 		m_player->render(renderer);
-
-		if (m_penguins.size() == 0 && m_boss == nullptr)
-			m_boss = new Patrick(renderer);
 
 		if (m_boss != nullptr)
 			m_boss->render(renderer);
@@ -120,7 +125,11 @@ namespace los {
 		m_player->update(tslf);
 	
 		if (m_boss != nullptr)
-			m_boss->update(tslf, xOff, yOff);
+			m_boss->update(tslf, m_floor->getX(), m_floor->getY(), xOff, yOff);
+
+		if (SDL_GetTicks() > m_bossSpawnTime)
+			for (Penguin *pen : m_penguins)
+				pen->hit();
 
 		auto it = m_penguins.begin();
 		while (it != m_penguins.end()) {
@@ -129,6 +138,40 @@ namespace los {
 			if ((*it)->isDead())
 				it = m_penguins.erase(it);
 			else ++it;
+		}
+		
+		if (m_penguins.size() == 0 && m_boss == nullptr) {
+			switch (m_nextBossID) {
+				case 0:
+					m_boss = new Patrick(m_renderer); break;
+				case 1:
+					m_boss = new Valentin(m_renderer); break;
+				case 2:
+					m_boss = new Aaron(m_renderer); break;
+				case 3:
+					m_boss = new Jannik(m_renderer); break;
+				default:
+					m_boss = nullptr;
+			}
+		}
+		
+		if (m_boss != nullptr) {
+			if (m_boss->isDead()) {
+				for (signed char i = 0; i < m_boss->IDENTIFIER + 1; i++) {
+					for (signed char j = 0; j < 32; j++) {
+						signed short sWidth = static_cast<signed short>(m_floor->getWidthResized() - windowWidth);
+						signed short sHeight = static_cast<signed short>(m_floor->getHeightResized() - windowHeight);
+						float pposx = rand() % sWidth - sWidth / 2 + windowWidth / 2;
+						float pposy = rand() % sHeight - sHeight / 2 + windowHeight / 2;
+						Penguin *pen = new Penguin(m_renderer, pposx, pposy);
+						m_penguins.push_back(pen);
+					}
+				}
+				m_bossSpawnTime = SDL_GetTicks() + 10000;
+				delete m_boss;
+				m_boss = nullptr;
+				m_nextBossID++;
+			}
 		}
 		
 		applyCollisions();
@@ -160,6 +203,25 @@ namespace los {
 				m_ui->setPenguinDeaths(m_ui->getPenguinDeaths() + 1);
 				(*it)->hit();
 			} else ++it;
+		}
+
+		if (m_boss != nullptr) {
+			SDL_Rect bossBox = m_boss->getHitbox();
+			SDL_Rect playerBox = m_player->getHitbox();
+			SDL_Rect projectileBox = m_player->getProjectileHitbox();
+			if (!m_boss->isInvincible() && m_player->projectileFlying())
+				if (SDL_HasIntersection(&bossBox, &projectileBox) == SDL_TRUE) {
+					m_boss->hit();
+					m_player->resetProjectile();
+					SoundBank::playSound("patrick");
+				}
+
+			if (!m_player->isInvincible())
+				if (SDL_HasIntersection(&bossBox, &playerBox) == SDL_TRUE) {
+					m_player->hit();
+					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 4);
+					SoundBank::playSound("playerdamage");
+				}
 		}
 	}
 };
