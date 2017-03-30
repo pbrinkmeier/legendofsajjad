@@ -37,7 +37,9 @@ namespace los {
 	}
 
 	void SoundBank::playSound(const char *soundName) {
-		Mix_PlayChannel(-1, m_sounds.at(soundName), 0);
+		auto it = m_sounds.find(soundName);
+		if (it != m_sounds.end())
+			Mix_PlayChannel(-1, it->second, 0);
 	}
 
 	void SoundBank::stop() {
@@ -45,7 +47,9 @@ namespace los {
 	}
 
 	void SoundBank::loop(const char *soundName) {
-		Mix_PlayChannel(-1, m_sounds.at(soundName), -1);
+		auto it = m_sounds.find(soundName);
+		if (it != m_sounds.end())
+			Mix_PlayChannel(-1, it->second, -1);
 	}
 
 	Mix_Chunk* SoundBank::loadSound(const char *file) {
