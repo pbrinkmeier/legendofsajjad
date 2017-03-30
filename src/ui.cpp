@@ -1,6 +1,7 @@
 #include "ui.hpp"
 #include "util/surfaceEditor.hpp"
 
+#include <cmath>
 #include <iostream>
 #include <SDL2/SDL_image.h>
 

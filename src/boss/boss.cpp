@@ -5,6 +5,7 @@
 
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <cmath>
 
 namespace los {
 	Boss::Boss(SDL_Renderer *renderer, const signed char ID, const char *spritePath, const float posx, const float posy)

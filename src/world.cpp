@@ -11,6 +11,7 @@
 #include "boss/jannik.hpp"
 
 #include <stdlib.h>
+#include <time.h>
 
 #include <iostream>
 #include <SDL2/SDL_image.h>
