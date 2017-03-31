@@ -22,7 +22,7 @@ namespace los {
 		private:
 			Sprite *m_heart;
 		private:
-			signed char m_heartCount = 8;
-			signed char m_playerHealth = 8 * 4;
+			signed short m_heartCount = 8;
+			signed short m_playerHealth = 8 * 4;
 	};
 };
