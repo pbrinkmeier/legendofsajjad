@@ -5,6 +5,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#ifdef main
+	#undef main
+#endif
+
 using namespace los;
 
 int main(void) {
@@ -22,4 +26,5 @@ int main(void) {
 
 	IMG_Quit();
 	SDL_Quit();
+	return 0;
 }
