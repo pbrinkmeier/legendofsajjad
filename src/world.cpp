@@ -118,13 +118,13 @@ namespace los {
 			if (Keyboard::keyDown(SDL_SCANCODE_D))
 				xOff -= SPEED;
 
-			if (m_floor->getX() >= -0.1f && xOff > 0.0f)
+			if (m_floor->getX() >= -3.0f && xOff > 0.0f)
 				xOff = 0.0f;
-			if (m_floor->getY() >= -0.1f && yOff > 0.0f)
+			if (m_floor->getY() >= -3.0f && yOff > 0.0f)
 				yOff = 0.0f;
-			if (m_floor->getX() <= -m_floor->getWidth() - windowWidth && xOff < 0.0f)
+			if (m_floor->getX() <= -m_floor->getWidth() - windowWidth + 3.0f && xOff < 0.0f)
 				xOff = 0.0f;
-			if (m_floor->getY() <= -m_floor->getHeight() - windowHeight && yOff < 0.0f)
+			if (m_floor->getY() <= -m_floor->getHeight() - windowHeight + 3.0f && yOff < 0.0f)
 				yOff = 0.0f;
 		}
 
