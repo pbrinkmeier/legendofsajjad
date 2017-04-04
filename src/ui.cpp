@@ -28,11 +28,15 @@ namespace los {
 		m_playerHealth = h;
 		m_heartCount = std::floor(h / 4);
 		
-		if (m_heartCount > 64)
+		if (m_heartCount > 64) {
+			m_playerHealth = 64 * 4;
 			m_heartCount = 64;
+		}
 
-		if (m_heartCount < 0)
+		if (m_heartCount < 0) {
+			m_playerHealth = 64 * 4;
 			m_heartCount = 0;
+		}
 	}
 
 	short UI::getPlayerHealth() {
