@@ -21,6 +21,7 @@ namespace los {
 			const signed short HEIGHT;
 		private:
 			bool m_shouldClose = true;
+			SDL_Surface *m_icon = nullptr;
 			SDL_Window *m_window = nullptr;
 			SDL_Renderer *m_renderer = nullptr;
 		private:

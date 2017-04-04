@@ -18,6 +18,9 @@ namespace los {
 		if (m_renderer == nullptr)
 			std::cerr << "SRC: window.cpp\tERR: Failed to create renderer, " << SDL_GetError() << "\n";
 	
+		m_icon = IMG_Load("../res/misc/icon.png");
+		SDL_SetWindowIcon(m_window, m_icon);
+
 		SDL_Surface *startScreen = IMG_Load("../res/screens/startscreen.png");
 		SDL_Surface *endScreen = IMG_Load("../res/screens/endscreen.png");
 		SDL_Surface *deathScreen = IMG_Load("../res/screens/deathscreen.png");
@@ -43,6 +46,8 @@ namespace los {
 
 		SDL_DestroyRenderer(m_renderer);
 		SDL_DestroyWindow(m_window);
+
+		SDL_FreeSurface(m_icon);
 	}
 
 	void Window::update() {
