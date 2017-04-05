@@ -22,7 +22,7 @@ namespace los {
 		SDL_Surface **floorPixels = new SDL_Surface*[4];
 		SDL_Surface *floorPNG = IMG_Load("../res/tiles/floor.png");
 
-		srand(time(NULL));
+		srand(static_cast<unsigned int>(time(NULL)));
 		floorPixels[0] = SurfaceEditor::crop(floorPNG, 0,  0, 16, 16);
 		floorPixels[1] = SurfaceEditor::crop(floorPNG, 16, 0, 16, 16);
 		floorPixels[2] = SurfaceEditor::crop(floorPNG, 32, 0, 16, 16);
@@ -56,14 +56,14 @@ namespace los {
 
 		SoundBank::init();
 		m_ui = new UI(renderer);
-		m_player = new Player(renderer, (windowWidth - 16 * 3) / 2.0, (windowHeight - 24 * 3) / 2.0);
+		m_player = new Player(renderer, (windowWidth - 16 * 3) / 2.0f, (windowHeight - 24 * 3) / 2.0f);
 		
 		const signed short MAX_PENGUINS = 32;
 		for (signed short i = 0; i < MAX_PENGUINS; i++) {
-			signed short sWidth = static_cast<signed short>(m_floor->getWidthResized() - windowWidth);
-			signed short sHeight = static_cast<signed short>(m_floor->getHeightResized() - windowHeight);
-			float pposx = rand() % sWidth - sWidth / 2 + windowWidth / 2;
-			float pposy = rand() % sHeight - sHeight / 2 + windowHeight / 2;
+			const signed short sWidth = static_cast<signed short>(m_floor->getWidthResized() - windowWidth);
+			const signed short sHeight = static_cast<signed short>(m_floor->getHeightResized() - windowHeight);
+			const float pposx = static_cast<float>(rand() % sWidth - sWidth / 2 + windowWidth / 2);
+			const float pposy = static_cast<float>(rand() % sHeight - sHeight / 2 + windowHeight / 2);
 			Penguin *pen = new Penguin(renderer, pposx, pposy);
 			m_penguins.push_back(pen);
 		}
@@ -98,7 +98,7 @@ namespace los {
 	}
 
 	void World::update(const double tslf, signed short windowWidth, signed short windowHeight) {
-		const float SPEED = tslf * 150.0f;
+		const float SPEED = static_cast<float>(tslf * 150.0f);
 		float xOff = 0.0f;
 		float yOff = 0.0f;
 		
@@ -173,8 +173,8 @@ namespace los {
 					for (signed char j = 0; j < 32; j++) {
 						signed short sWidth = static_cast<signed short>(m_floor->getWidthResized() - windowWidth);
 						signed short sHeight = static_cast<signed short>(m_floor->getHeightResized() - windowHeight);
-						float pposx = rand() % sWidth - sWidth / 2 + windowWidth / 2;
-						float pposy = rand() % sHeight - sHeight / 2 + windowHeight / 2;
+						const float pposx = static_cast<float>(rand() % sWidth - sWidth / 2 + windowWidth / 2);
+						const float pposy = static_cast<float>(rand() % sHeight - sHeight / 2 + windowHeight / 2);
 						Penguin *pen = new Penguin(m_renderer, pposx, pposy);
 						m_penguins.push_back(pen);
 					}

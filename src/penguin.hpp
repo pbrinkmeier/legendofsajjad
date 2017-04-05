@@ -5,7 +5,7 @@
 namespace los {
 	class Penguin {
 		public:
-			Penguin(SDL_Renderer*, const signed short, const signed short);
+			Penguin(SDL_Renderer*, const float, const float);
 			~Penguin();
 		public:
 			void render(SDL_Renderer*);

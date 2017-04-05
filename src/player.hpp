@@ -7,7 +7,7 @@
 namespace los {
 	class Player {
 		public:
-			Player(SDL_Renderer*, const signed short, const signed short);
+			Player(SDL_Renderer*, const float, const float);
 			~Player();
 		public:
 			void render(SDL_Renderer*);

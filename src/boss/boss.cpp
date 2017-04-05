@@ -23,8 +23,8 @@ namespace los {
 		const float anPosx = (800 - 160 * 3) / 2;
 		const float anPosy = 600;
 
-		m_boss = new Sprite(renderer, boss, posx, posy, boss->w * 6, boss->h * 6);
-		m_announcement = new Sprite(renderer, annc, anPosx, anPosy, annc->w * 3, annc->h * 3);
+		m_boss = new Sprite(renderer, boss, posx, posy, boss->w * 6.0f, boss->h * 6.0f);
+		m_announcement = new Sprite(renderer, annc, anPosx, anPosy, annc->w * 3.0f, annc->h * 3.0f);
 
 		m_animStart = SDL_GetTicks();
 		m_animFinish = m_animStart + 5000;
@@ -61,13 +61,13 @@ namespace los {
 		m_boss->move(xOff, yOff);
 		
 		if (SDL_GetTicks() > m_animStart && SDL_GetTicks() < m_animStart + 1000)
-			m_announcement->move(0, -tslf * 120);
+			m_announcement->move(0.0f, static_cast<float>(-tslf * 120));
 
 		if (SDL_GetTicks() > m_animStart + 4000 && SDL_GetTicks() < m_animFinish)
-			m_announcement->move(0, tslf * 120);
+			m_announcement->move(0.0f, static_cast<float>(tslf * 120));
 	
-		static float xDir = rand() % 2;
-		static float yDir = rand() % 2;
+		static float xDir = static_cast<float>(rand() % 2);
+		static float yDir = static_cast<float>(rand() % 2);
 		static Uint32 nextUpdate = SDL_GetTicks() + 3000;
 
 		if (SDL_GetTicks() > nextUpdate) {
@@ -83,8 +83,8 @@ namespace los {
 				xDir *= SPEED;
 				yDir *= SPEED;
 			} else {
-				xDir = rand() % 2;
-				yDir = rand() % 2;
+				xDir = static_cast<float>(rand() % 2);
+				yDir = static_cast<float>(rand() % 2);
 			}
 			nextUpdate = SDL_GetTicks() + 3000;
 		}
@@ -100,7 +100,6 @@ namespace los {
 		if (bossY > worldY + 1800)
 			yDir = -SPEED;
 
-
-		m_boss->move(xDir * tslf * 256, yDir * tslf * 256);
+		m_boss->move(static_cast<float>(xDir * tslf * 256), static_cast<float>(yDir * tslf * 256));
 	}
 };
