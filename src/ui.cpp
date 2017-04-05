@@ -19,14 +19,14 @@ namespace los {
 
 	void UI::render(SDL_Renderer *renderer) {	
 		for (signed char i = 0; i < m_heartCount; i++) {
-			m_heart->setPosition(i * 32 + 32, m_heart->getY());
+			m_heart->setPosition(i * 32.0f + 32, m_heart->getY());
 			m_heart->render(renderer);
 		}
 	}
 		
 	void UI::setPlayerHealth(signed short h) {
 		m_playerHealth = h;
-		m_heartCount = std::floor(h / 4);
+		m_heartCount = static_cast<signed short>(std::floor(h / 4));
 		
 		if (m_heartCount > 64) {
 			m_playerHealth = 64 * 4;
@@ -34,7 +34,7 @@ namespace los {
 		}
 
 		if (m_heartCount < 0) {
-			m_playerHealth = 64 * 4;
+			m_playerHealth = 0;
 			m_heartCount = 0;
 		}
 	}
