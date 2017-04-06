@@ -1,5 +1,7 @@
 #include "penguin.hpp"
 
+#include <cmath>
+
 #include "keyboard.hpp"
 #include "util/surfaceEditor.hpp"
 #include "util/surfaceCreator.hpp"
