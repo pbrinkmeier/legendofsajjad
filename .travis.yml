@@ -17,6 +17,7 @@ script:
   - cp ../res/misc/legendofsajjad.desktop appdir/usr/share/applications/
   - cp ../res/misc/legendofsajjad.desktop appdir/
   - cp ../res/entities/player.png appdir/legendofsajjad.png
+  - cp -r  ../res/ appdir/usr/
 
 after_success:
   - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" 
