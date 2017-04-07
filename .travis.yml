@@ -26,11 +26,10 @@ after_success:
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/pulseaudio/
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -verbose=2
-  - ls
   - # The next 3 lines are a workaround needed because the game loads its data from a path relative to cwd 
   - ./linuxdeployqt*.AppImage --appimage-extract
   - rm -f ./appdir/AppRun
-  - mv ./appdir/usr/res/misc/ ./appdir ; chmod a+x ./appdir/AppRun
+  - mv ./appdir/usr/res/misc/AppRun ./appdir ; chmod a+x ./appdir/AppRun
   - ./squashfs/usr/bin/linuxdeployqt ./appdir/
   - find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
   - curl --upload-file ./Legend*.AppImage https://transfer.sh/Legend_of_Sajjad-git.$(git rev-parse --short HEAD)-x86_64.AppImage
