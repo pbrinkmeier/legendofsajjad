@@ -25,6 +25,14 @@ after_success:
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/pulseaudio/
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
-  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -appimage
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
+  - ./linuxdeployqt*.AppImage --appimage-extract
+  - cat > ./appdir/AppRun <<\EOF
+  - #!/bin/sh
+  - HERE="$(dirname "$(readlink -f "${0}")")"
+  - cd "${HERE}/usr/bin"
+  - exec ./legendofsajjad "$@"
+  - EOF
+  - ./squashfs/usr/bin/linuxdeployqt ./appdir/
   - find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
   - curl --upload-file ./Legend*.AppImage https://transfer.sh/Legend_of_Sajjad-git.$(git rev-parse --short HEAD)-x86_64.AppImage
