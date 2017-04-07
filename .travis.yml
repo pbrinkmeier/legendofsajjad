@@ -30,6 +30,6 @@ after_success:
   - ./linuxdeployqt*.AppImage --appimage-extract
   - rm -f ./appdir/AppRun
   - mv ./appdir/usr/res/misc/AppRun ./appdir ; chmod a+x ./appdir/AppRun
-  - ./squashfs/usr/bin/linuxdeployqt ./appdir/
+  - ./squashfs-root/usr/bin/linuxdeployqt ./appdir/
   - find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
   - curl --upload-file ./Legend*.AppImage https://transfer.sh/Legend_of_Sajjad-git.$(git rev-parse --short HEAD)-x86_64.AppImage
