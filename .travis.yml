@@ -25,7 +25,8 @@ after_success:
   - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
   - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/pulseaudio/
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
-  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -verbose=2
+  - ls
   - # The next 3 lines are a workaround needed because the game loads its data from a path relative to cwd 
   - ./linuxdeployqt*.AppImage --appimage-extract
   - rm -f ./appdir/AppRun
