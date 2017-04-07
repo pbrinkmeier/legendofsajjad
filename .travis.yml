@@ -27,6 +27,7 @@ after_success:
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
   - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
   - ./linuxdeployqt*.AppImage --appimage-extract
+  - rm -f ./appdir/AppRun
   - cat > ./appdir/AppRun <<\EOF
   - #!/bin/sh
   - HERE="$(dirname "$(readlink -f "${0}")")"
