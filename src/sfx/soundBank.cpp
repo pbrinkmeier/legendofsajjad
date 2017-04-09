@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace los {
-	std::map<const char*, Mix_Chunk*> SoundBank::m_sounds;
+	std::map<const short, Mix_Chunk*> SoundBank::m_sounds;
 	
 	void SoundBank::init() {
 		if (Mix_Init(MIX_INIT_OGG) != MIX_INIT_OGG)
@@ -15,16 +15,15 @@ namespace los {
 		const int CHUNKSIZE = 4096;
 		if (Mix_OpenAudio(FREQUENCY, FORMAT, CHANNELS, CHUNKSIZE) == -1)
 			std::cerr << "SRC: soundBank.cpp\tERR: Failed to initialize audio API\n";
-
 		Mix_Volume(-1, MIX_MAX_VOLUME / 6);
 
-		m_sounds["patrick"] = loadSound("../res/sound/patrick.wav");
-		m_sounds["penguin"] = loadSound("../res/sound/penguin.wav");
-		m_sounds["playerdamage"] = loadSound("../res/sound/playerdamage.wav");
-		m_sounds["projectile"] = loadSound("../res/sound/projectile.wav");
-		m_sounds["bossdeath"] = loadSound("../res/sound/bossdeath.wav");
-		m_sounds["maintheme"] = loadSound("../res/sound/maintheme.ogg");
-		m_sounds["finalboss"] = loadSound("../res/sound/finalbosstheme.ogg");
+		m_sounds[SFX_PATRICK] = loadSound("../res/sound/patrick.wav");
+		m_sounds[SFX_PENGUIN] = loadSound("../res/sound/penguin.wav");
+		m_sounds[SFX_PLAYERDMG] = loadSound("../res/sound/playerdamage.wav");
+		m_sounds[SFX_PROJECTILE] = loadSound("../res/sound/projectile.wav");
+		m_sounds[SFX_BOSSDEATH] = loadSound("../res/sound/bossdeath.wav");
+		m_sounds[SFX_MAINTHEME] = loadSound("../res/sound/maintheme.ogg");
+		m_sounds[SFX_FINALBOSS] = loadSound("../res/sound/finalbosstheme.ogg");
 	}
 
 	void SoundBank::destroy() {
@@ -36,20 +35,26 @@ namespace los {
 		Mix_Quit();
 	}
 
-	void SoundBank::playSound(const char *soundName) {
+	void SoundBank::playSound(const SOUND soundName) {
 		auto it = m_sounds.find(soundName);
-		if (it != m_sounds.end())
-			Mix_PlayChannel(-1, it->second, 0);
+		if (it != m_sounds.end()) {
+			if (Mix_PlayChannel(-1, it->second, 0) == -1)
+				std::cerr << "SRC: soundBank.cpp\tERR: Failed to play sound " << soundName << "\n";
+		} else
+			std::cerr << "SRC: soundBank.cpp\tERR: Could not find sound " << soundName << "\n";
 	}
 
 	void SoundBank::stop() {
 		Mix_HaltChannel(-1);
 	}
 
-	void SoundBank::loop(const char *soundName) {
+	void SoundBank::loop(const SOUND soundName) {
 		auto it = m_sounds.find(soundName);
-		if (it != m_sounds.end())
-			Mix_PlayChannel(-1, it->second, -1);
+		if (it != m_sounds.end()) {
+			if (Mix_PlayChannel(-1, it->second, -1) == -1)
+				std::cerr << "SRC: soundBank.cpp\tERR: Failed to loop sound " << soundName << "\n";
+		} else
+			std::cerr << "SRC: soundBank.cpp\ERR: Could not find sound " << soundName << "\n";
 	}
 
 	Mix_Chunk* SoundBank::loadSound(const char *file) {

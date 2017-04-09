@@ -5,6 +5,16 @@
 
 namespace los {
 	class SoundBank {
+		public:
+			enum SOUND {
+				SFX_PATRICK,
+				SFX_PENGUIN,
+				SFX_PLAYERDMG,
+				SFX_PROJECTILE,
+				SFX_BOSSDEATH,
+				SFX_MAINTHEME,
+				SFX_FINALBOSS
+			};
 		private:
 			SoundBank() {};
 			~SoundBank() {};
@@ -14,10 +24,10 @@ namespace los {
 		private:
 			static Mix_Chunk* loadSound(const char*);
 		public:
-			static void loop(const char*);
+			static void loop(const SOUND);
 			static void stop();
-			static void playSound(const char*);
+			static void playSound(const SOUND);
 		private:
-			static std::map<const char*, Mix_Chunk*> m_sounds;
+			static std::map<const short, Mix_Chunk*> m_sounds;
 	};
 };

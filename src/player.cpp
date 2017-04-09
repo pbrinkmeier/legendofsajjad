@@ -120,7 +120,7 @@ namespace los {
 		}
 
 		if (Keyboard::keyDown(SDL_SCANCODE_RIGHT) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
-			SoundBank::playSound("projectile");
+			SoundBank::playSound(SoundBank::SFX_PROJECTILE);
 			m_projectileFlying = true;
 			m_projectileDirY = 0.0f;
 			m_projectileDirX = 1.0f;
@@ -129,7 +129,7 @@ namespace los {
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_LEFT) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
-			SoundBank::playSound("projectile");
+			SoundBank::playSound(SoundBank::SFX_PROJECTILE);
 			m_projectileFlying = true;
 			m_projectileDirY = 0.0f;
 			m_projectileDirX = -1.0f;
@@ -138,7 +138,7 @@ namespace los {
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_DOWN) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
-			SoundBank::playSound("projectile");
+			SoundBank::playSound(SoundBank::SFX_PROJECTILE);
 			m_projectileFlying = true;
 			m_projectileDirY = 1.0f;
 			m_projectileDirX = 0.0f;
@@ -147,7 +147,7 @@ namespace los {
 		}
 
 		else if (Keyboard::keyDown(SDL_SCANCODE_UP) && !m_projectileFlying && SDL_GetTicks() > m_nextLaunch) {
-			SoundBank::playSound("projectile");
+			SoundBank::playSound(SoundBank::SFX_PROJECTILE);
 			m_projectileFlying = true;
 			m_projectileDirY = -1.0f;
 			m_projectileDirX = 0.0f;

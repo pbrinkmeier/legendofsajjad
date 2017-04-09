@@ -68,7 +68,7 @@ namespace los {
 			m_penguins.push_back(pen);
 		}
 
-		SoundBank::loop("maintheme");
+		SoundBank::loop(SoundBank::SFX_MAINTHEME);
 		m_nextBossID = 0;
 		m_bossSpawnTime = SDL_GetTicks() + 10000;
 	}
@@ -150,13 +150,19 @@ namespace los {
 		if (m_penguins.size() == 0 && m_boss == nullptr) {
 			switch (m_nextBossID) {
 				case 0:
-					m_boss = new Patrick(m_renderer); break;
+					m_boss = new Patrick(m_renderer);
+					break;
 				case 1:
-					m_boss = new Valentin(m_renderer); break;
+					m_boss = new Valentin(m_renderer);
+					break;
 				case 2:
-					m_boss = new Aaron(m_renderer); break;
+					m_boss = new Aaron(m_renderer);
+					break;
 				case 3:
-					m_boss = new Jannik(m_renderer); SoundBank::stop(); SoundBank::loop("finalboss"); break;
+					m_boss = new Jannik(m_renderer);
+					SoundBank::stop();
+					SoundBank::loop(SoundBank::SFX_FINALBOSS);
+					break;
 				default:
 					m_boss = nullptr;
 			}
@@ -179,7 +185,7 @@ namespace los {
 						m_penguins.push_back(pen);
 					}
 				}
-				SoundBank::playSound("bossdeath");
+				SoundBank::playSound(SoundBank::SFX_BOSSDEATH);
 				m_bossSpawnTime = SDL_GetTicks() + 10000;
 				delete m_boss;
 				m_boss = nullptr;
@@ -202,7 +208,7 @@ namespace los {
 			SDL_Rect penBox = (*it)->getHitbox();
 			if (SDL_HasIntersection(&playerBox, &penBox) == SDL_TRUE) {
 				if (!m_player->isInvincible()) {
-					SoundBank::playSound("playerdamage");
+					SoundBank::playSound(SoundBank::SFX_PLAYERDMG);
 					m_player->hit();
 					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 4);
 				}
@@ -210,7 +216,7 @@ namespace los {
 
 			SDL_Rect projectileHitbox = m_player->getProjectileHitbox();
 			if (m_player->projectileFlying() && SDL_HasIntersection(&penBox, &projectileHitbox) == SDL_TRUE) {
-				SoundBank::playSound("penguin");
+				SoundBank::playSound(SoundBank::SFX_PENGUIN);
 				m_player->resetProjectile();
 				m_ui->setPlayerHealth(m_ui->getPlayerHealth() + 1);
 				m_ui->setPenguinDeaths(m_ui->getPenguinDeaths() + 1);
@@ -226,7 +232,7 @@ namespace los {
 				if (SDL_HasIntersection(&bossBox, &projectileBox) == SDL_TRUE) {
 					m_boss->hit();
 					m_player->resetProjectile();
-					SoundBank::playSound("patrick");
+					SoundBank::playSound(SoundBank::SFX_PATRICK);
 				}
 
 			if (!m_player->isInvincible())
@@ -238,7 +244,7 @@ namespace los {
 						damageMultiplier = m_boss->IDENTIFIER;
 
 					m_ui->setPlayerHealth(m_ui->getPlayerHealth() - 4 * damageMultiplier);
-					SoundBank::playSound("playerdamage");
+					SoundBank::playSound(SoundBank::SFX_PLAYERDMG);
 				}
 		}
 	}
