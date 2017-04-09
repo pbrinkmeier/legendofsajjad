@@ -3,6 +3,7 @@
 #include "sfx/soundBank.hpp"
 #include "util/surfaceEditor.hpp"
 #include "util/surfaceCreator.hpp"
+#include <cmath>
 
 #include <SDL2/SDL_image.h>
 

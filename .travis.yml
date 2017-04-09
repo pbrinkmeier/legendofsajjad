@@ -1,0 +1,36 @@
+language: c
+compiler: gcc
+sudo: require
+dist: trusty
+
+install: 
+    - sudo apt-get -y install libsdl2-image-dev libsdl2-mixer-dev
+
+script:
+  - mkdir bin
+  - cd bin
+  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  - make -j4
+  - mkdir -p appdir/usr/bin
+  - cp LegendOfSajjad appdir/usr/bin/legendofsajjad
+  - strip appdir/usr/bin/legendofsajjad
+  - mkdir -p appdir/usr/share/{icons,applications}
+  - cp ../res/misc/legendofsajjad.desktop appdir/usr/share/applications/
+  - cp ../res/misc/legendofsajjad.desktop appdir/
+  - cp ../res/entities/player.png appdir/legendofsajjad.png
+  - cp -r  ../res/ appdir/usr/
+
+after_success:
+  - wget -c "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage" 
+  - chmod a+x linuxdeployqt*.AppImage
+  - unset QTDIR; unset QT_PLUGIN_PATH ; unset LD_LIBRARY_PATH
+  - export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/pulseaudio/
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs
+  - ./linuxdeployqt*.AppImage ./appdir/usr/share/applications/*.desktop -bundle-non-qt-libs -verbose=2
+  - # The next 3 lines are a workaround needed because the game loads its data from a path relative to cwd 
+  - ./linuxdeployqt*.AppImage --appimage-extract
+  - rm -f ./appdir/AppRun
+  - mv ./appdir/usr/res/misc/AppRun ./appdir ; chmod a+x ./appdir/AppRun
+  - ./squashfs-root/usr/bin/appimagetool ./appdir/
+  - find ./appdir -executable -type f -exec ldd {} \; | grep " => /usr" | cut -d " " -f 2-3 | sort | uniq
+  - curl --upload-file ./Legend*.AppImage https://transfer.sh/Legend_of_Sajjad-git.$(git rev-parse --short HEAD)-x86_64.AppImage
