@@ -32,3 +32,6 @@ How to build on Linux (should be similar for MacOS)
 
 # Known bugs
 - sometimes sounds like the boss death sound are skipped for some reason
+
+# Special thanks
+- Thanks to 8BitUniverse whose LoZ and Take On Me 8 bit renditions I used due to my own lack of musical talent. All rights to these tracks belong to them.
