@@ -38,13 +38,10 @@ namespace los {
 	void SoundBank::playSound(const SOUND soundName) {
 		auto it = m_sounds.find(soundName);
 		if (it != m_sounds.end()) {
-			if (Mix_PlayChannel(-1, it->second, 0) == -1)
-				std::cerr
-				<< "SRC: soundBank.cpp\tERR: Failed to play sound "
-				<< soundName
-				<< " ("
-				<< Mix_GetError()
-				<< ")\n";
+			if (Mix_PlayChannel(-1, it->second, 0) == -1) {
+				std::string message = "SRC: soundBank.cpp\tERR: Failed to play sound ";
+				std::cerr << message << soundName << " (" << Mix_GetError() << ")\n";
+			}
 		} else
 			std::cerr << "SRC: soundBank.cpp\tERR: Could not find sound " << soundName << "\n";
 	}
